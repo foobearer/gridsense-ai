@@ -1,0 +1,23 @@
+# ============================================================
+# pyproject.toml
+# ============================================================
+# Project configuration for pytest and ruff (linter).
+# ============================================================
+
+[tool.pytest.ini_options]
+# Where pytest looks for tests
+testpaths = ["tests"]
+# Auto-detect async test functions (used with FastAPI TestClient)
+asyncio_mode = "auto"
+# Verbose output + short traceback format
+addopts = "-v --tb=short"
+
+[tool.ruff]
+# Line length to match Black's default
+line-length = 100
+# Target Python version
+target-version = "py311"
+# E = pycodestyle, F = pyflakes, I = isort
+select = ["E", "F", "I"]
+# E501 = line too long — we enforce this via line-length above
+ignore = ["E501"]

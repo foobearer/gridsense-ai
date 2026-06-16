@@ -1,0 +1,58 @@
+# ============================================================
+# GridSense AI — Python Dependencies
+# ============================================================
+# Core API framework — FastAPI handles routing, validation,
+# and async request handling. Uvicorn is its ASGI server.
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+
+# Pydantic for request/response schema validation and
+# settings management via environment variables
+pydantic==2.7.1
+pydantic-settings==2.3.0
+
+# ── Time-Series Forecasting ──────────────────────────────
+# PyTorch is used to build and train the LSTM model
+torch==2.3.1
+
+# Prophet is Facebook's time-series forecasting library,
+# excels at capturing seasonality and trend in energy data
+prophet==1.1.5
+
+# ── Anomaly Detection ───────────────────────────────────
+# Scikit-learn provides Isolation Forest (unsupervised
+# anomaly detection) and preprocessing utilities
+scikit-learn==1.5.0
+
+# ── Data Processing ─────────────────────────────────────
+numpy==1.26.4
+pandas==2.2.2
+
+# ── Experiment Tracking ─────────────────────────────────
+# MLflow logs model parameters, metrics, and artefacts
+# so every training run is reproducible and comparable
+mlflow==2.13.2
+
+# ── Model Drift Detection ───────────────────────────────
+# Evidently monitors for statistical drift between
+# reference (training) data and live production data
+evidently==0.4.30
+
+# ── Observability ───────────────────────────────────────
+# Prometheus exposes a /metrics endpoint scraped by
+# Prometheus server; Grafana visualises those metrics
+prometheus-client==0.20.0
+
+# Structlog produces structured (JSON in prod, readable
+# in dev) log output instead of plain print statements
+structlog==24.2.0
+
+# ── HTTP / Utilities ────────────────────────────────────
+httpx==0.27.0
+python-multipart==0.0.9
+python-dotenv==1.0.1
+
+# ── Testing ─────────────────────────────────────────────
+pytest==8.2.2
+pytest-asyncio==0.23.7
+pytest-cov==5.0.0
