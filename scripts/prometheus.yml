@@ -1,0 +1,19 @@
+# ============================================================
+# scripts/prometheus.yml
+# ============================================================
+# Prometheus scrape configuration for GridSense AI.
+#
+# Prometheus pulls metrics from the target at /metrics every
+# scrape_interval seconds and stores them as time-series data.
+# ============================================================
+
+global:
+  scrape_interval: 15s       # scrape every 15 seconds
+  evaluation_interval: 15s   # evaluate alerting rules every 15s
+
+scrape_configs:
+  - job_name: gridsense_api
+    static_configs:
+      - targets:
+          - api:8000           # Docker Compose service name + port
+    metrics_path: /metrics
