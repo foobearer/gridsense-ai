@@ -1,0 +1,74 @@
+# ============================================================
+# docker-compose.yml
+# ============================================================
+# Local development stack for GridSense AI.
+#
+# Services:
+#   api        — FastAPI application (port 8000)
+#   prometheus — Metrics scraper (port 9090)
+#   grafana    — Metrics dashboard (port 3000, login: admin/gridsense)
+#
+# Usage:
+#   docker compose up --build     # start everything
+#   docker compose down           # stop and remove containers
+#   docker compose logs api -f    # tail API logs
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ── GridSense AI API ───────────────────────────────────────
+  api:
+    build: .
+    ports:
+      - "8000:8000"         # FastAPI
+    env_file:
+      - .env                # load local environment variables
+    environment:
+      - APP_ENV=development
+    volumes:
+      # Mount local data/ into container so trained models persist
+      # between `docker compose down` / `docker compose up` cycles
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+  # ── Prometheus ─────────────────────────────────────────────
+  # Scrapes /metrics from the API every 15 seconds and stores
+  # the time-series data for Grafana to query.
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  # ── Grafana ────────────────────────────────────────────────
+  # Dashboards for API latency, request rate, anomaly counts.
+  # Login: admin / gridsense
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=gridsense
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  # Named volume so Grafana dashboard configuration persists
+  # across container restarts
+  grafana_data:
